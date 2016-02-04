@@ -2,6 +2,7 @@
 
 const _ = require('lodash');
 const createChannel = require('@osufpp/service-transport');
+const domain = require('domain');
 const logger = require('@osufpp/logger');
 const Promise = require('bluebird');
 const Reflect = require('core-js/library/es6/reflect');
@@ -12,11 +13,13 @@ class Service {
         this.data = data;
     }
 
-    dispatch(path, args) {
+    dispatch(path, transactionId, args) {
+        const service = this;
+
         return Promise.try(function () {
             const subPath = path.split('.').slice(1).join('.');
 
-            const fn = _.get(this.data, subPath);
+            const fn = _.get(service.data, subPath);
 
             if (!_.isFunction(fn)) {
                 const functionName = subPath.split('.').slice(1).join('.');
@@ -25,8 +28,18 @@ class Service {
                 throw new Error(`Function ${functionName} does not exist in service ${serviceName}`);
             }
 
-            return Reflect.apply(fn, this, args);
-        }.bind(this));
+            const ctx = domain.create();
+
+            return new Promise(function (resolve, reject) {
+                ctx.run(function () {
+                    domain.active.transactionId = transactionId;
+
+                    resolve(Reflect.apply(fn, service, args));
+                });
+
+                ctx.on('error', reject);
+            });
+        });
     }
 
     listen(name) {
@@ -55,15 +68,16 @@ class Service {
                 const replyTo = msg.properties.replyTo;
                 const correlationId = msg.properties.correlationId;
                 const routingKey = msg.fields.routingKey;
+                const transactionId = msg.properties.headers.transactionId;
 
-                return dispatch(routingKey, JSON.parse(msg.content.toString('utf8')))
+                return dispatch(routingKey, transactionId, JSON.parse(msg.content.toString('utf8')))
                     .then(function (data) {
                         const success = true;
 
                         return ch.sendToQueue(
                             replyTo,
                             new Buffer(JSON.stringify(data)),
-                            { correlationId, headers: { success } }
+                            { correlationId, headers: { success, transactionId } }
                         );
                     })
                     .catch(function (error) {
@@ -72,7 +86,7 @@ class Service {
                         return ch.sendToQueue(
                             replyTo,
                             new Buffer(JSON.stringify(serializerr(error))),
-                            { correlationId, headers: { success } }
+                            { correlationId, headers: { success, transactionId } }
                         );
                     })
                     .finally(function () {

@@ -1,13 +1,23 @@
 {
-  "name": "fpp-service",
-  "version": "1.0.0",
-  "description": "",
+  "name": "@osufpp/service",
+  "version": "1.0.0-beta.2",
+  "description": "Service handler",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint -c .eslintrc.yml lib"
   },
-  "author": "",
-  "license": "ISC",
+  "homepage": "https://github.com/osufpp/fpp-service",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/osufpp/fpp-service.git"
+  },
+  "bugs": {
+    "url": "https://github.com/osufpp/fpp-service/issues",
+    "email": "developer@beardon.com"
+  },
+  "author": "Tyson Cleary <tyson@beardon.com> (https://github.com/tyscorp)",
+  "main": "index",
+  "license": "MIT",
   "dependencies": {
     "@osufpp/logger": "latest",
     "@osufpp/service-transport": "latest",
@@ -15,5 +25,13 @@
     "core-js": "^2.0.3",
     "lodash": "^4.2.1",
     "serializerr": "^1.0.2"
+  },
+  "devDependencies": {
+    "babel-eslint": "^4.1.8",
+    "eslint": "^1.10.3",
+    "eslint-config-beardon": "latest"
+  },
+  "engines": {
+    "node": ">= 4.0"
   }
 }
