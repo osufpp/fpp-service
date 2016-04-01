@@ -1,6 +1,6 @@
 {
   "name": "@osufpp/service",
-  "version": "1.0.0-beta.2",
+  "version": "1.0.0-beta.5",
   "description": "Service handler",
   "main": "index.js",
   "scripts": {
@@ -16,13 +16,14 @@
     "email": "developer@beardon.com"
   },
   "author": "Tyson Cleary <tyson@beardon.com> (https://github.com/tyscorp)",
-  "main": "index",
   "license": "MIT",
   "dependencies": {
     "@osufpp/logger": "latest",
     "@osufpp/service-transport": "latest",
     "bluebird": "^3.2.1",
+    "body-parser": "^1.15.0",
     "core-js": "^2.0.3",
+    "express": "^4.13.4",
     "lodash": "^4.2.1",
     "serializerr": "^1.0.2"
   },

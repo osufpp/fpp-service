@@ -7,10 +7,11 @@ const logger = require('@osufpp/logger');
 const Promise = require('bluebird');
 const Reflect = require('core-js/library/es6/reflect');
 const serializerr = require('serializerr');
+const slurp = require('./lib/slurp');
 
 class Service {
     constructor(data) {
-        this.data = data;
+        this.data = slurp(data);
     }
 
     dispatch(path, transactionId, args) {
@@ -44,6 +45,7 @@ class Service {
 
     listen(name) {
         if (!name) {
+            // arrow function to keep `this` binding... You're welcome, Aaron!
             return Promise.resolve(_.mapValues(this.data, (value, serviceName) => this.listen(serviceName)));
         }
 
