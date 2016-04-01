@@ -1,6 +1,6 @@
 {
   "name": "@osufpp/service",
-  "version": "1.0.0-beta.5",
+  "version": "1.0.0",
   "description": "Service handler",
   "main": "index.js",
   "scripts": {
