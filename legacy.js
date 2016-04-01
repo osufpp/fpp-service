@@ -11,9 +11,7 @@ const slurp = require('./lib/slurp');
 const createServer = _.memoize(function createServer(port) {
     const app = express();
 
-    app.listen(port, '0.0.0.0', function () {
-        console.log('Express server listening on port %d', port);
-    });
+    app.listen(port, '0.0.0.0', _.noop);
 
     app.use(bodyParser.json());
 
@@ -26,7 +24,6 @@ const createServer = _.memoize(function createServer(port) {
 
 function createDispatch(dispatch) {
     return function (req, res, next) {
-        console.log(req.headers);
         const routingKey = req.body.routingKey;
         const transactionId = req.body.transactionId;
         const args = req.body.args;
@@ -47,7 +44,6 @@ class Service {
     }
 
     dispatch(path, transactionId, args) {
-        console.log(path, transactionId, args);
         const service = this;
 
         return Promise.try(function () {

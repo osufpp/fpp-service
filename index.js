@@ -97,9 +97,7 @@ class Service {
             }, { noAck: false });
 
             // TODO: do we ever want this to resolve?
-            return new Promise(function (resolve, reject) {
-
-            });
+            return new Promise(_.noop);
         }));
     }
 };
